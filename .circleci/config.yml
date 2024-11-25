@@ -13,8 +13,9 @@ jobs:
       - run:
           name: Download Taskfile runner
           command: |
-            wget https://github.com/go-task/task/releases/download/v3.40.0/task_linux_amd64.tar.gz
-            wget https://github.com/go-task/task/releases/download/v3.40.0/task_checksums.txt
+            export TASK_VERSION="v3.40.0"
+            wget https://github.com/go-task/task/releases/download/${TASK_VERSION}/task_linux_amd64.tar.gz
+            wget https://github.com/go-task/task/releases/download/${TASK_VERSION}/task_checksums.txt
             sha256sum --check --ignore-missing task_checksums.txt
             tar xf task_linux_amd64.tar.gz task
             rm task_linux_amd64.tar.gz
