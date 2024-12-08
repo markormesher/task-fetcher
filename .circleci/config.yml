@@ -3,7 +3,7 @@ version: 2.1
 defaults: &defaults
   working_directory: /tmp/app
   docker:
-    - image: cimg/base:2024.11
+    - image: cimg/base:2024.12
 
 jobs:
   setup:
