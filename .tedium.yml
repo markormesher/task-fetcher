@@ -4,5 +4,8 @@ extends:
 chores:
   - url: "https://github.com/markormesher/tedium-chores"
     directory: "generate-taskfile"
+  - url: "https://github.com/markormesher/tedium-chores"
+    directory: "tag-new-releases"
+    exposePlatformToken: true
   - url: "https://github.com/markormesher/task-fetcher"
     directory: "chores/update-task"
