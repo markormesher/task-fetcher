@@ -1,4 +1,4 @@
-FROM debian:bookworm-slim@sha256:518e5a4e83da8f769751d984a11cb648be2c89bd485c219f1975daf31f7860c9 as builder
+FROM debian:bookworm-slim@sha256:d365f4920711a9074c4bcd178e8f457ee59250426441ab2a5f8106ed8fe948eb as builder
 WORKDIR /
 
 RUN apt update \
