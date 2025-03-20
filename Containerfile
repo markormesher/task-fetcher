@@ -13,7 +13,7 @@ RUN wget https://github.com/go-task/task/releases/download/${TASK_VERSION}/task_
 
 # ---
 
-FROM busybox:1.37.0@sha256:498a000f370d8c37927118ed80afe8adc38d1edcbfc071627d17b25c88efcab0
+FROM busybox:1.37.0@sha256:37f7b378a29ceb4c551b1b5582e27747b855bbfaa73fa11914fe0df028dc581f
 
 LABEL image.registry=ghcr.io
 LABEL image.name=markormesher/task-fetcher
