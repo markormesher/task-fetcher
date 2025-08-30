@@ -2,4 +2,4 @@ name: "Update Task"
 description: "This chore updates the version of [Task](https://taskfile.dev) bundled into this image."
 steps:
   - image: "debian:bookworm"
-    command: /repo/chores/update-task/update-task.sh
+    command: "/tedium/repo/chores/update-task/update-task.sh"
