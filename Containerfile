@@ -4,7 +4,7 @@ WORKDIR /
 RUN apt update \
   && apt install -y --no-install-recommends ca-certificates wget
 
-ENV TASK_VERSION="v3.47.0"
+ENV TASK_VERSION="v3.48.0"
 
 RUN wget https://github.com/go-task/task/releases/download/${TASK_VERSION}/task_linux_amd64.tar.gz \
   && wget https://github.com/go-task/task/releases/download/${TASK_VERSION}/task_checksums.txt \
