@@ -4,23 +4,14 @@ on:
   - "push"
 
 jobs:
-  debug:
-    runs-on: "ubuntu-latest"
-    container:
-      image: "docker.io/golang:1.26.4@sha256:68cb6d68bed024785b69195b89af7ac7a444f27791435f98647edff595aa0479"
-    steps:
-      - uses: "markormesher/ci-resources/setup@fe4d41c424ff2e0f92057066b469d4740e4bc8b8"
-
   imgbuild:
     runs-on: "ubuntu-latest"
-    needs:
-      - "debug"
     permissions:
       packages: "write"
     steps:
       - uses: "markormesher/ci-resources/setup@fe4d41c424ff2e0f92057066b469d4740e4bc8b8"
       - run: |
-          echo "${{ github.token }}" | buildah login ghcr.io -u markormesher --password-stdin
+          buildah login ghcr.io -u "${{ github.actor }}" -p "${{ github.token }}"
       - run: "task imgrefs"
       - run: "task imgbuild"
       - run: "task imgpush"
@@ -28,7 +19,6 @@ jobs:
   ci-all:
     runs-on: "ubuntu-latest"
     needs:
-      - "debug"
       - "imgbuild"
     container:
       image: "docker.io/busybox:1.38.0@sha256:fd8d9aa63ba2f0982b5304e1ee8d3b90a210bc1ffb5314d980eb6962f1a9715d"
