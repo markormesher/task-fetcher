@@ -16,7 +16,6 @@ tasks:
     cmds:
       - cmd: |-
           set -euo pipefail
-          set -x
 
           if ! command -v buildah >/dev/null 2>&1; then
             echo "Buildah is not available" >&2
@@ -29,11 +28,6 @@ tasks:
           if command -v fuse-overlayfs >/dev/null 2>&1; then
             buildah_opts+=("--storage-opt" "overlay.mount_program=$(command -v fuse-overlayfs)")
           fi
-
-          # if [[ ! -e /dev/fuse ]]; then
-          #   echo "No FUSE support, using VFS instead"
-          #   buildah_opts+=("--storage-driver" "vfs")
-          # fi
 
           if [[ -f argfile.conf ]]; then
             bud_opts+=("--build-arg-file" "argfile.conf")
@@ -60,8 +54,28 @@ tasks:
       - imgrefs-root
     cmds:
       - cmd: |-
-          echo noop
+          set -euo pipefail
 
+          if ! command -v buildah >/dev/null 2>&1; then
+            echo "Buildah is not available" >&2
+            exit 1
+          fi
+
+          buildah_opts=()
+
+          if command -v fuse-overlayfs >/dev/null 2>&1; then
+            buildah_opts+=("--storage-opt" "overlay.mount_program=$(command -v fuse-overlayfs)")
+          fi
+
+          if [[ -f .task-meta-imgrefs ]]; then
+            cat .task-meta-imgrefs | (grep -v "^localhost" || :) | while read tag; do
+              buildah "${buildah_opts[@]}" push "${tag}"
+              echo "Pushed ${tag}"
+            done
+          else
+            echo "No .task-meta-imgrefs file - nothing will be pushed"
+            exit 1
+          fi
   imgrefs:
     cmds:
       - task: imgrefs-root
