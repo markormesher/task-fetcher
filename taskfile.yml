@@ -25,6 +25,10 @@ tasks:
           buildah_opts=()
           bud_opts=(--layers -f "Containerfile")
 
+          if command -v fuse-overlayfs >/dev/null 2>&1; then
+            buildah_opts+=("--storage-opt" "overlay.mount_program=$(command -v fuse-overlayfs)")
+          fi
+
           # if [[ ! -e /dev/fuse ]]; then
           #   echo "No FUSE support, using VFS instead"
           #   buildah_opts+=("--storage-driver" "vfs")
