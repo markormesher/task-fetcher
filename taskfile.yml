@@ -17,41 +17,32 @@ tasks:
       - cmd: |-
           set -euo pipefail
 
-          if command -v podman >/dev/null 2>&1; then
-            # Podman for building locally or in Tatsu CI
-            builder=podman
-          elif command -v docker >/dev/null 2>&1; then
-            # Docker for building in Circle CI
-            builder=docker
-          else
-            echo "Cannot find Podman or Docker" >&2
+          if ! command -v buildah >/dev/null 2>&1; then
+            echo "Buildah is not available" >&2
             exit 1
           fi
 
-          export BUILDX_GIT_INFO=0
+          buildah_opts=()
+          bud_opts=(--layers -f "Containerfile")
 
-          opts=(
-          	-f "Containerfile"
-          )
+          # if [[ ! -e /dev/fuse ]]; then
+          #   echo "No FUSE support, using VFS instead"
+          #   buildah_opts+=("--storage-driver" "vfs")
+          # fi
 
-          # Populate args if a file exists (Podman supports --build-arg-file, but Docker does not)
           if [[ -f argfile.conf ]]; then
-            while read arg; do
-              k=$(cut -d = -f 1 <<<"$arg")
-              v=$(cut -d = -f 2- <<<"$arg")
-              opts+=("--build-arg" "$k=$v")
-            done <<< "$(cat argfile.conf | grep -v '^#' | grep '=')"
+            bud_opts+=("--build-arg-file" "argfile.conf")
           fi
 
-          # First build to get visible logs
-          $builder build "${opts[@]}" .
+          # first build to get visible logs
+          buildah "${buildah_opts[@]}" bud "${bud_opts[@]}"
 
           # Second (cached) build to get the image ID
-          img=$($builder build "${opts[@]}" -q .)
+          img=$(buildah "${buildah_opts[@]}" bud "${bud_opts[@]}" -q)
 
           if [[ -f .task-meta-imgrefs ]]; then
             cat .task-meta-imgrefs | while read tag; do
-              $builder tag "$img" "${tag}"
+              buildah "${buildah_opts[@]}" tag "$img" "${tag}"
               echo "Tagged ${tag}"
             done
           fi
@@ -64,30 +55,8 @@ tasks:
       - imgrefs-root
     cmds:
       - cmd: |-
-          set -euo pipefail
+        echo noop
 
-          if command -v podman >/dev/null 2>&1; then
-            # Podman for building locally or in Tatsu CI
-            builder=podman
-          elif command -v docker >/dev/null 2>&1; then
-            # Docker for building in Circle CI
-            builder=docker
-          else
-            echo "Cannot find Podman or Docker" >&2
-            exit 1
-          fi
-
-          export BUILDX_GIT_INFO=0
-
-          if [[ -f .task-meta-imgrefs ]]; then
-            cat .task-meta-imgrefs | (grep -v "^localhost" || :) | while read tag; do
-              $builder push "${tag}"
-              echo "Pushed ${tag}"
-            done
-          else
-            echo "No .task-meta-imgrefs file - nothing will be pushed"
-            exit 1
-          fi
   imgrefs:
     cmds:
       - task: imgrefs-root
