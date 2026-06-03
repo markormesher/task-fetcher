@@ -9,17 +9,16 @@ jobs:
     container:
       image: "docker.io/golang:1.26.4@sha256:68cb6d68bed024785b69195b89af7ac7a444f27791435f98647edff595aa0479"
     steps:
-      - uses: "markormesher/ci-resources/setup@2e0c5b4e20ae03ad16b60dff677705ba442e172d"
-      - run: "task --list-all"
+      - uses: "markormesher/ci-resources/setup@fe4d41c424ff2e0f92057066b469d4740e4bc8b8"
 
   imgbuild:
     runs-on: "ubuntu-latest"
     needs:
       - "debug"
     steps:
-      - uses: "markormesher/ci-resources/setup@2e0c5b4e20ae03ad16b60dff677705ba442e172d"
+      - uses: "markormesher/ci-resources/setup@fe4d41c424ff2e0f92057066b469d4740e4bc8b8"
       - run: |
-          echo "${GITHUB_TOKEN}" | buildah login ghcr.io -u markormesher --password-stdin
+          echo "${{ github.token }}" | buildah login ghcr.io -u markormesher --password-stdin
       - run: "task imgrefs"
       - run: "task imgbuild"
       - run: "task imgpush"
