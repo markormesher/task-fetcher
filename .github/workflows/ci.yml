@@ -16,8 +16,8 @@ jobs:
     runs-on: "ubuntu-latest"
     needs:
       - "debug"
-    container:
-      image: "quay.io/buildah/stable"
+    # container:
+    #   image: "quay.io/buildah/stable"
     steps:
       - uses: "markormesher/ci-resources/setup@2e0c5b4e20ae03ad16b60dff677705ba442e172d"
       - run: "task imgrefs"
