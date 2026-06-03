@@ -16,6 +16,7 @@ tasks:
     cmds:
       - cmd: |-
           set -euo pipefail
+          set -x
 
           if ! command -v buildah >/dev/null 2>&1; then
             echo "Buildah is not available" >&2
