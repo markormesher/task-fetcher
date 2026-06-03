@@ -9,7 +9,7 @@ jobs:
     container:
       image: "docker.io/golang:1.26.4@sha256:68cb6d68bed024785b69195b89af7ac7a444f27791435f98647edff595aa0479"
     steps:
-      - uses: "markormesher/ci-resources/setup@41984759b8ec0f85543593fbf5ad9a5ad3c0270f"
+      - uses: "markormesher/ci-resources/setup@d87181f49ca02a4b16b04e3cd02ffa10e104a2e7"
       - run: "task --list-all"
 
   imgbuild:
@@ -19,7 +19,7 @@ jobs:
     container:
       image: "quay.io/buildah/stable"
     steps:
-      - uses: "markormesher/ci-resources/setup@41984759b8ec0f85543593fbf5ad9a5ad3c0270f"
+      - uses: "markormesher/ci-resources/setup@d87181f49ca02a4b16b04e3cd02ffa10e104a2e7"
       - run: "task imgrefs"
       - run: "task imgbuild"
       - run: "task imgpush"
