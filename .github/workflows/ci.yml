@@ -9,12 +9,12 @@ jobs:
     permissions:
       packages: "write"
     steps:
-      - uses: "markormesher/ci-resources/setup@fe4d41c424ff2e0f92057066b469d4740e4bc8b8"
+      - uses: "markormesher/ci-resources/setup@1f35cae2345536f9b1bbe3f5655538ba459883d9"
       - run: |
           buildah login ghcr.io -u "${{ github.actor }}" -p "${{ github.token }}"
-      - run: "task imgrefs"
-      - run: "task imgbuild"
-      - run: "task imgpush"
+      - run: "./task imgrefs"
+      - run: "./task imgbuild"
+      - run: "./task imgpush"
 
   ci-all:
     runs-on: "ubuntu-latest"
