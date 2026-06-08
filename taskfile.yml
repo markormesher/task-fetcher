@@ -23,11 +23,15 @@ tasks:
           fi
 
           buildah_opts=()
-          bud_opts=(--layers -f "Containerfile")
 
           if command -v fuse-overlayfs >/dev/null 2>&1; then
             buildah_opts+=("--storage-opt" "overlay.mount_program=$(command -v fuse-overlayfs)")
           fi
+
+          bud_opts=(
+            --layers
+            -f "Containerfile"
+          )
 
           if [[ -f argfile.conf ]]; then
             bud_opts+=("--build-arg-file" "argfile.conf")
